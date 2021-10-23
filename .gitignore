@@ -1,2 +1,3 @@
 
-carbon_price_tag/__pycache__/*
+__pycache__\*
+*.pyc
