@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import carbon_price_qr.views
+
 urlpatterns = [
-    path('carbon_price_qr', include('carbon_price_qr.urls')),
+    path("", carbon_price_qr.views.index, name="index"),
     path('admin/', admin.site.urls)
 ]
