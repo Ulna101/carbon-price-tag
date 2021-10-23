@@ -18,6 +18,12 @@ class distance:
 class mode:
     pass
 
+
+class route:
+
+    def __init__(self):
+        
+
 #route class
 #stop method
 
