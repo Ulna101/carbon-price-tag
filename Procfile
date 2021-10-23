@@ -1,1 +1,1 @@
-web: gunicorn carbon_price_qr.wsgi
+web: gunicorn carbon_price_tag.wsgi
