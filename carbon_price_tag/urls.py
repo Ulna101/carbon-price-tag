@@ -20,5 +20,6 @@ import carbon_price_qr.views
 
 urlpatterns = [
     path("", carbon_price_qr.views.index, name="index"),
+    path("qr", carbon_price_qr.views.qr, name='qr'),
     path('admin/', admin.site.urls)
 ]
