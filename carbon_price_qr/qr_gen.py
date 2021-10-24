@@ -11,7 +11,7 @@ def create_qr(dest):
         version=None,
         error_correction=qrcode.constants.ERROR_CORRECT_Q,
         box_size = 10,
-        border=0
+        border=3
     )
     qr.add_data(dest)
     qr.make(fit=True)
