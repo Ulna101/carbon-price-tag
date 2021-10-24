@@ -19,7 +19,7 @@ def create_qr(dest):
     img = qr.make_image(fill_color=(83, 132, 63), back_color="white")
     qr_size, _ = img.size
     
-    logo_size = int(qr_size * 0.45)
+    logo_size = int(qr_size * 0.35)
     min = int((qr_size / 2) - (logo_size / 2))
     max = int((qr_size / 2) + (logo_size / 2))
     
