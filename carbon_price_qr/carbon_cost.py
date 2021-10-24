@@ -18,8 +18,8 @@ Classifications include:
 """
 #capture file path
 module_dir = os.path.dirname(__file__)
-carbon_item_data = pd.read_excel(module_dir + '\\static\\item.xlsx')
-transport_carbon_data = pd.read_excel(module_dir + '\\static\\transport.xlsx')
+carbon_item_data = pd.read_excel(module_dir + '/static/item.xlsx')
+transport_carbon_data = pd.read_excel(module_dir + '/static/transport.xlsx')
 
 GEOLOCATOR = geopy.geocoders.Nominatim(user_agent="carbon-tag")
 
