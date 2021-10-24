@@ -2,5 +2,10 @@
 <div>
     <h2>Your product has a carbon cost of</h2>
     <h1>{{c_cost}}</h1>
+    <h2>Compared to the average of</h2>
+    <h1>{{c_avg}}</h1>
+    <h2>
+        Your item, {{inp.material}} {{inp.item}}, releases around {{item_cost}} lbs of carbon during production, while shipping from {{inp.origin}} to {{inp.destination}} by {{inp.transport}} emits about {{transport_cost}} pounds per mile for {{dist}} miles
+    </h2>
 </div>
 {% endblock %}

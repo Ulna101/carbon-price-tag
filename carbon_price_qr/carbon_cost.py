@@ -7,7 +7,7 @@ from geopy import distance
 import os
 import pandas as pd
 import sys
-
+import numpy as np
 """Calculating total carbon cost
 Read two separate excel spreadsheets to calculate the total carbon cost for a preset list of classifications.
 Classifications include:
@@ -17,47 +17,55 @@ Classifications include:
     4) mode
 """
 #capture file path
+memo = {}
+
 module_dir = os.path.dirname(__file__)
 carbon_item_data = pd.read_excel(module_dir + '/static/item.xlsx')
 transport_carbon_data = pd.read_excel(module_dir + '/static/transport.xlsx')
 
 GEOLOCATOR = geopy.geocoders.Nominatim(user_agent="carbon-tag")
 
+def data_headings():
+    def get_tuples(dict, key):
+        return  [(s, s.capitalize()) for s in dict[key].unique()]
+    return {'item': get_tuples(carbon_item_data, 'item'), 
+            'material': get_tuples(carbon_item_data, 'material'), 
+            'transport': get_tuples(transport_carbon_data, 'method')}
+
+def avarage_cost(item):
+    all_items = carbon_item_data[(carbon_item_data['item'] == item)]
+    return round(np.average(all_items['carbon']))
+    
 def carbon_cost(dict):
-    orig = get_loc(dict["origin"])
-    dest = get_loc(dict["destination"])
-    dist = calculate_distance(orig, dest)
+    dist = calculate_distance(dict["origin"], dict["destination"])
     carbon = get_carbon(dict["item"], dict["material"])
     method = get_method(dict["transport"])
-    return round(calculate_carbon(dist, carbon, method), 3)
+    return round(calculate_carbon(dist, carbon, method))
 
-def get_loc(loc_name):
-    location = GEOLOCATOR.geocode(loc_name)
-    return (location.latitude, location.longitude)
-
-# TODO: look on excel spreadsheets to see these valeus
 def get_carbon(item, mat):
     #get appropriate DataFrames for each excel file
-    # data = [['cotton', 't-shirt', 2177], ['cotton', 'dress', 5000]] #CHANGE THIS
-    data = carbon_item_data
-    data_df = pd.DataFrame(data, columns = ['item','material','carbon'])
+    data_df = carbon_item_data
+
     carbon = data_df[(data_df['item'] == item) & (data_df['material'] == mat)]['carbon'].iloc[0]
-    #carbon = data_df.loc[data_df['Fiber Type'] == num1].loc[data_df['Item'] == num2].at[0, 'Carbon']
     return carbon
 
 def get_method(transport):
-    # method = [['boat', 5], ['plane', 16]] #CHANGE THIS
-    method = transport_carbon_data
-    method_df = pd.DataFrame(method, columns = ['method', 'carbon per mile'])
+    method_df = transport_carbon_data
 
     #calculate appropriate variables
     mode = method_df[method_df['method'] == transport]['carbon per mile'].iloc[0]
-    # mode = method_df.loc[method_df['Method'] == num3].at[0, 'CPM']
     return mode
 
 #calculate the distance from an origin to a destination
 def calculate_distance(origin, destination):
-    kilometers = geodesic(origin, destination).km 
+    
+    def get_loc(loc_name):
+        if loc_name in memo: memo[loc_name]
+        else: memo[loc_name] = GEOLOCATOR.geocode(loc_name)
+        location = memo[loc_name]
+        return (location.latitude, location.longitude)
+    
+    kilometers = geodesic(get_loc(origin), get_loc(destination)).km 
     miles = (0.621371) * kilometers #convert to miles
     return miles
 
@@ -99,7 +107,7 @@ if __name__ == "__main__":
     #destination preset to Shanghai and New York City
     direction = [[(31.2304, 121.4737), (40.7128, 74.0060)]] 
     direction_df = pd.DataFrame(direction, columns = ['Origin', 'Destination'], index=None)
-    distance = calculate_distance(direction_df.at[0, "Origin"], direction_df.at[0, "Destination"])
+    distance = calculate_distance("Shanghai", "New York City")
     #final calculation
     print(carbon)
     print('Carbon: {0}'.format(round(calculate_carbon(distance, carbon, mode))))

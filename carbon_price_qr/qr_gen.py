@@ -3,7 +3,6 @@ import os
 from PIL import Image
 from io import BytesIO 
 from django.templatetags.static import static
-from qrcode.image.styledpil import StyledPilImage
 import base64
 
 def create_qr(dest):
