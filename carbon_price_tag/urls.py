@@ -17,12 +17,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls.static import static
 
 import carbon_price_qr.views
 
 urlpatterns = [
     path("", carbon_price_qr.views.index, name="index"),
     path("qr", carbon_price_qr.views.qr, name='qr'),
+    path('tag', carbon_price_qr.views.tag, name='tag'),
     path('admin/', admin.site.urls)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
