@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Carbon Price Tag</title>
+</head>
+
+<body>
+    <h1>
+        CARBON PRICE TAG!!!
+    </h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div>
+            {{form.as_table }}
+        </div>
+
+        <input type="submit" value=Submit ">
+    </form>
+</body>
+
+</html>
