@@ -1,5 +1,7 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 <div>
     <h2>QR Code:</h2>
+    <img src="{{qr}}" />
+    <a href="{{qr}}" download>Download</a>
 </div>
 {% endblock %}

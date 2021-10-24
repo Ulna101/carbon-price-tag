@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 """carbon_price_tag URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -15,6 +17,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
 
 import carbon_price_qr.views
 
@@ -22,4 +25,4 @@ urlpatterns = [
     path("", carbon_price_qr.views.index, name="index"),
     path("qr", carbon_price_qr.views.qr, name='qr'),
     path('admin/', admin.site.urls)
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
