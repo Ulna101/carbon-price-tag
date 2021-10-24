@@ -41,7 +41,6 @@ def get_carbon(item, mat):
     # data = [['cotton', 't-shirt', 2177], ['cotton', 'dress', 5000]] #CHANGE THIS
     data = carbon_item_data
     data_df = pd.DataFrame(data, columns = ['item','material','carbon'])
-    print(data_df)
     carbon = data_df[(data_df['item'] == item) & (data_df['material'] == mat)]['carbon'].iloc[0]
     #carbon = data_df.loc[data_df['Fiber Type'] == num1].loc[data_df['Item'] == num2].at[0, 'Carbon']
     return carbon
