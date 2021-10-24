@@ -38,5 +38,9 @@ def tag(request):
     params['transport_cost'] = round(get_method(req['transport']), 5)
     params['item_cost'] = round(get_carbon(req['item'], req['material']))
     params['equiv'] = get_equivalencies(params['c_cost'])
-    
+    params['comps'] = [
+        "A wool {} emits {}lbs".format(req['item'], round(get_carbon(req['item'], "wool"))),
+        "A cotton {} emits {}lbs".format(req['item'], round(get_carbon(req['item'], "cotton"))),
+        "A polyester {} emits {}lbs".format(req['item'], round(get_carbon(req['item'], "polyester"))),
+    ]
     return render(request, 'tag.html', params)
