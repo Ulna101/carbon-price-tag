@@ -25,4 +25,4 @@ urlpatterns = [
     path("qr", carbon_price_qr.views.qr, name='qr'),
     path('tag', carbon_price_qr.views.tag, name='tag'),
     path('admin/', admin.site.urls)
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
