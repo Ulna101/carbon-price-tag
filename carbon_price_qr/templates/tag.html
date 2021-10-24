@@ -2,10 +2,23 @@
 <div>
     <h2>Your product has a carbon cost of</h2>
     <h1>{{c_cost}}</h1>
-    <h2>Compared to the average of</h2>
-    <h1>{{c_avg}}</h1>
+    <h2>Whereas the average for your product, {{inp.item}}, from {{inp.destination}} would cost {{c_avg}}</h2>
+    <h1>How was this calculated?</h1>
     <h2>
-        Your item, {{inp.material}} {{inp.item}}, releases around {{item_cost}} lbs of carbon during production, while shipping from {{inp.origin}} to {{inp.destination}} by {{inp.transport}} emits about {{transport_cost}} pounds per mile for {{dist}} miles
+        Your item, {{inp.material}} {{inp.item}}, releases around {{item_cost}} lbs of carbon during production, while shipping from {{inp.origin}} to {{inp.destination}} by {{inp.transport}} emits about {{transport_cost}} pounds per mile for {{dist}} miles for
+        a total of {{total_transport}} lbs emitted during transportation.
+        <br>
+        <h6><em>This was calcuated with figures from <a href="https://storage.googleapis.com/scsc/Green%20Freight/EDF-Green-Freight-Handbook.pdf"> here </a> and assuming your product is 2lbs.</em></h6>
     </h2>
+    <h1>How much does that affect the enviroment?</h1>
+    <h2>Your carbon output is equal to...</h2>
+    <ul>
+        {% for e in equiv %}
+        <li>
+            {{e}}
+        </li>
+        {% endfor %}
+    </ul>
+    <h2>According from data from the EPA and the Arbor Day Foundation</h2>
 </div>
 {% endblock %}

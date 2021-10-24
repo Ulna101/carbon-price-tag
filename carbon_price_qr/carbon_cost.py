@@ -20,10 +20,20 @@ Classifications include:
 memo = {}
 
 module_dir = os.path.dirname(__file__)
-carbon_item_data = pd.read_excel(module_dir + '/static/item.xlsx')
-transport_carbon_data = pd.read_excel(module_dir + '/static/transport.xlsx')
+carbon_item_data = pd.read_excel(module_dir + '/static/data/item.xlsx')
+transport_carbon_data = pd.read_excel(module_dir + '/static/data/transport.xlsx')
 
 GEOLOCATOR = geopy.geocoders.Nominatim(user_agent="carbon-tag")
+
+EQUIVALENCES = {
+    "The carbon captured by {} trees": 48000,
+    "Emissions from burning through {} gallons of gas": 51,
+    "Emissions from charging {} smartphones": 55176,
+    "Emissions from powering {} homes": 0.055
+}
+
+def get_equivalencies(carbon):
+    return [k.format(carbon * EQUIVALENCES[k] / 1000) for k in EQUIVALENCES.keys()]
 
 def data_headings():
     def get_tuples(dict, key):
@@ -34,13 +44,13 @@ def data_headings():
 
 def avarage_cost(item):
     all_items = carbon_item_data[(carbon_item_data['item'] == item)]
-    return round(np.average(all_items['carbon']))
+    return np.average(all_items['carbon'])
     
 def carbon_cost(dict):
     dist = calculate_distance(dict["origin"], dict["destination"])
     carbon = get_carbon(dict["item"], dict["material"])
     method = get_method(dict["transport"])
-    return round(calculate_carbon(dist, carbon, method))
+    return calculate_carbon(dist, carbon, method)
 
 def get_carbon(item, mat):
     #get appropriate DataFrames for each excel file

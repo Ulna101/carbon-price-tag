@@ -30,9 +30,13 @@ def tag(request):
     params = {}
     req = request.GET.dict()
     params['inp'] = req
-    params['c_cost'] = carbon_cost(req)
-    params['c_avg'] = avarage_cost(req['item'])
+    params['c_cost'] = round(carbon_cost(req))
+    params['total_transport'] = round(calculate_distance(req['origin'], req['destination']) * 
+                            get_method(req['transport']))
+    params['c_avg'] = round(avarage_cost(req['item']) + params['total_transport'])
     params['dist'] = round(calculate_distance(req['origin'], req['destination']))
     params['transport_cost'] = round(get_method(req['transport']), 5)
     params['item_cost'] = round(get_carbon(req['item'], req['material']))
+    params['equiv'] = get_equivalencies(params['c_cost'])
+    
     return render(request, 'tag.html', params)
