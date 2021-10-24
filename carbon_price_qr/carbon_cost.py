@@ -1,4 +1,5 @@
 # classes.py
+from typing import ItemsView
 import geopy
 from geopy.distance import geodesic
 from geopy import distance
@@ -16,10 +17,9 @@ Classifications include:
     4) mode
 """
 #capture file path
-
-# module_dir = os.path.dirname(__file__)
-# carbon_item_data = pd.read_excel(module_dir + '/static/item.xlsx')
-# transport_carbon_data = pd.read_excel(module_dir + '/static/transport.xlsx')
+module_dir = os.path.dirname(__file__)
+carbon_item_data = pd.read_excel(module_dir + 'static/item.xlsx')
+transport_carbon_data = pd.read_excel(module_dir + 'static/transport.xlsx')
 
 GEOLOCATOR = geopy.geocoders.Nominatim(user_agent="carbon-tag")
 
@@ -27,31 +27,33 @@ def carbon_cost(dict):
     orig = get_loc(dict["origin"])
     dest = get_loc(dict["destination"])
     dist = calculate_distance(orig, dest)
-    carbon = get_carbon(dict["material"], dict["item"])
+    carbon = get_carbon(dict["item"], dict["material"])
     method = get_method(dict["transport"])
     return round(calculate_carbon(dist, carbon, method), 3)
-
 
 def get_loc(loc_name):
     location = GEOLOCATOR.geocode(loc_name)
     return (location.latitude, location.longitude)
 
 # TODO: look on excel spreadsheets to see these valeus
-def get_carbon(mat, item):
+def get_carbon(item, mat):
     #get appropriate DataFrames for each excel file
-    data = [['cotton', 't-shirt', 2177], ['cotton', 'dress', 5000]] #CHANGE THIS
-    data_df = pd.DataFrame(data, columns = ['Fiber Type','Item','Carbon'])
-    
-    carbon = data_df[(data_df['Fiber Type'] == mat) & (data_df['Item'] == item)]['Carbon'].iloc[0]
-
+    # data = [['cotton', 't-shirt', 2177], ['cotton', 'dress', 5000]] #CHANGE THIS
+    data = carbon_item_data
+    data_df = pd.DataFrame(data, columns = ['item','material','carbon'])
+    print(data_df)
+    carbon = data_df[(data_df['item'] == item) & (data_df['material'] == mat)]['carbon'].iloc[0]
+    #carbon = data_df.loc[data_df['Fiber Type'] == num1].loc[data_df['Item'] == num2].at[0, 'Carbon']
     return carbon
 
 def get_method(transport):
-    method = [['boat', 5], ['plane', 16]] #CHANGE THIS
-    method_df = pd.DataFrame(method, columns = ['Method', 'CPM'])
+    # method = [['boat', 5], ['plane', 16]] #CHANGE THIS
+    method = transport_carbon_data
+    method_df = pd.DataFrame(method, columns = ['method', 'CPM'])
 
     #calculate appropriate variables
-    mode = method_df[method_df['Method'] == transport]['CPM'].iloc[0]
+    mode = method_df[method_df['method'] == transport]['CPM'].iloc[0]
+    # mode = method_df.loc[method_df['Method'] == num3].at[0, 'CPM']
     return mode
 
 #calculate the distance from an origin to a destination
@@ -70,20 +72,25 @@ def calculate_carbon(dist, carbon, mode):
 #all you have to do is input...geolocator = GoogleV3()
 if __name__ == "__main__":
     #Input 3 arguments (5 if library geolocator is used)
-    num1 = sys.argv[1] #fiber type
-    num2 = sys.argv[2] #item
-    num3 = sys.argv[3] #method of transportation
+    item = sys.argv[1] #item
+    mat = sys.argv[2] #material
+    method = sys.argv[3] #method of transportation
     #num4 = sys.argv[4] #latitude
     #num5 = sys.argv[5] #longitude
-    #get appropriate DataFrames for each excel file
-    data = [['cotton', 't-shirt', 2177], ['cotton', 'dress', 5000]] #CHANGE THIS
-    data_df = pd.DataFrame(data, columns = ['Fiber Type','Item','Carbon'])
-    #create dataframe for method
-    method = [['boat', 5], ['plane', 16]] #CHANGE THIS
-    method_df = pd.DataFrame(method, columns = ['Method', 'CPM'])
-    #calculate appropriate variables
-    carbon = data_df.loc[data_df['Fiber Type'] == num1].loc[data_df['Item'] == num2].at[0, 'Carbon']
-    mode = method_df.loc[method_df['Method'] == num3].at[0, 'CPM']
+
+    # #get appropriate DataFrames for each excel file
+    # data = [['cotton', 't-shirt', 2177], ['cotton', 'dress', 5000]] #CHANGE THIS
+    # data_df = pd.DataFrame(data, columns = ['Fiber Type','Item','Carbon'])
+    # #create dataframe for method
+    # method = [['boat', 5], ['plane', 16]] #CHANGE THIS
+    # method_df = pd.DataFrame(method, columns = ['Method', 'CPM'])
+    # #calculate appropriate variables
+    # carbon = data_df.loc[data_df['Fiber Type'] == num1].loc[data_df['Item'] == num2].at[0, 'Carbon']
+    # mode = method_df.loc[method_df['Method'] == num3].at[0, 'CPM']
+
+    carbon = get_carbon(item, mat)
+    mode = get_method(method)
+
     ###MAKE APPROPRIATE CHANGES IF USING GEOLOCATOR###
     ###uncomment lines 60-63
     # loc1 = geolocator.geocode(num1)
@@ -95,4 +102,5 @@ if __name__ == "__main__":
     direction_df = pd.DataFrame(direction, columns = ['Origin', 'Destination'], index=None)
     distance = calculate_distance(direction_df.at[0, "Origin"], direction_df.at[0, "Destination"])
     #final calculation
+    print(carbon)
     print('Carbon: {0}'.format(round(calculate_carbon(distance, carbon, mode))))
