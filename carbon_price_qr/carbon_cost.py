@@ -26,7 +26,7 @@ transport_carbon_data = pd.read_excel(module_dir + '/static/data/transport.xlsx'
 GEOLOCATOR = geopy.geocoders.Nominatim(user_agent="carbon-tag")
 
 EQUIVALENCES = {
-    "The carbon captured by {} trees": 48000,
+    "The carbon captured by {} trees": 1000 / 48,
     "Emissions from burning through {} gallons of gas": 51,
     "Emissions from charging {} smartphones": 55176,
     "Emissions from powering {} homes": 0.055
