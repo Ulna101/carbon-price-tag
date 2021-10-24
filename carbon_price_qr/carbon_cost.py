@@ -18,8 +18,8 @@ Classifications include:
 """
 #capture file path
 module_dir = os.path.dirname(__file__)
-carbon_item_data = pd.read_excel(module_dir + 'static/item.xlsx')
-transport_carbon_data = pd.read_excel(module_dir + 'static/transport.xlsx')
+carbon_item_data = pd.read_excel(module_dir + '\\static\\item.xlsx')
+transport_carbon_data = pd.read_excel(module_dir + '\\static\\transport.xlsx')
 
 GEOLOCATOR = geopy.geocoders.Nominatim(user_agent="carbon-tag")
 
@@ -49,10 +49,10 @@ def get_carbon(item, mat):
 def get_method(transport):
     # method = [['boat', 5], ['plane', 16]] #CHANGE THIS
     method = transport_carbon_data
-    method_df = pd.DataFrame(method, columns = ['method', 'CPM'])
+    method_df = pd.DataFrame(method, columns = ['method', 'carbon per mile'])
 
     #calculate appropriate variables
-    mode = method_df[method_df['method'] == transport]['CPM'].iloc[0]
+    mode = method_df[method_df['method'] == transport]['carbon per mile'].iloc[0]
     # mode = method_df.loc[method_df['Method'] == num3].at[0, 'CPM']
     return mode
 

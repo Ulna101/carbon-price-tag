@@ -23,7 +23,6 @@ def index(request):
 
 def qr(request):
     target = URL + "/tag?" + request.GET.urlencode()
-    print(request.GET)
     return render(request, 'qrcode.html', {'qr': "data:image/png;base64," + create_qr(target)})
 
 def tag(request):
